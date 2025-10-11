@@ -1,6 +1,8 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import './App.css';
+import AddTask from "./components/addTask";
+import DeleteTask from "./components/deleteTask";
 
 function Home() {
   return (
@@ -24,6 +26,27 @@ function About() {
         <li>Hot reload in development</li>
         <li>Production-ready builds</li>
       </ul>
+    </div>
+  );
+}
+
+function Tasks() {
+  const [tasks, setTasks] = useState([]);
+
+  const addTask = (name) => {
+    const newTask = { id: Date.now(), name };
+    setTasks([...tasks, newTask]);
+  };
+
+  const deleteTask = (id) => {
+    setTasks(tasks.filter((task) => task.id !== id));
+  };
+
+  return (
+    <div>
+      <h1>📝 Task Manager</h1>
+      <AddTask addTask={addTask} />
+      <DeleteTask tasks={tasks} deleteTask={deleteTask} />
     </div>
   );
 }
