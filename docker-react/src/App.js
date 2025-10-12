@@ -1,50 +1,47 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
-import './App.css';
-
-function Home() {
-  return (
-    <div>
-      <h1>🐳 Docker React App</h1>
-      <p>Welcome to your Dockerized React application!</p>
-      <p>This app is running in a Docker container with hot reload enabled.</p>
-    </div>
-  );
-}
-
-function About() {
-  return (
-    <div>
-      <h1>About</h1>
-      <p>This is a sample React app containerized with Docker.</p>
-      <p>Features:</p>
-      <ul>
-        <li>React 18</li>
-        <li>React Router</li>
-        <li>Hot reload in development</li>
-        <li>Production-ready builds</li>
-      </ul>
-    </div>
-  );
-}
+import React, { useState } from "react";
+import { Routes, Route } from "react-router-dom";
+import Header from "./components/Header";
+import HomeRoute from "./routes/HomeRoute";
+import AddTaskRoute from "./routes/AddTaskRoute";
+import { getAllTasks, addTask, deleteTask } from "./services/taskService";
 
 function App() {
+  const [tasks, setTasks] = useState(getAllTasks());
+
+  const handleAddTask = (taskDetails) => {
+    const newTask = {
+      id: Date.now().toString(),
+      title: taskDetails.title,
+      description: taskDetails.description,
+      priority: taskDetails.priority,
+      createdAt: new Date().toISOString(),
+    };
+    const updated = addTask(newTask); 
+    setTasks(updated);
+  };
+
+  const handleDeleteTask = (taskId) => {
+    const updated = deleteTask(taskId);
+    setTasks(updated);
+  };
+
   return (
-    <Router>
-      <div className="App">
-        <nav className="navbar">
-          <Link to="/" className="nav-link">Home</Link>
-          <Link to="/about" className="nav-link">About</Link>
-        </nav>
-        
-        <main className="main-content">
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/about" element={<About />} />
-          </Routes>
-        </main>
-      </div>
-    </Router>
+    <div>
+      <Header count={tasks.length} />
+
+      <main className="container my-4">
+        <Routes>
+          <Route
+            path="/"
+            element={<HomeRoute tasks={tasks} onDelete={handleDeleteTask} />}
+          />
+          <Route
+            path="/add"
+            element={<AddTaskRoute onAdd={handleAddTask} />}
+          />
+        </Routes>
+      </main>
+    </div>
   );
 }
 
