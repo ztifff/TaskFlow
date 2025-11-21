@@ -4,7 +4,7 @@ import { BrowserRouter } from "react-router-dom";
 import App from "./App";
 import "bootstrap/dist/css/bootstrap.min.css";
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
-import "./TaskFlow/style/custom.css";
+import "./style/custom.css";
 
 const container = document.getElementById("root");
 const root = createRoot(container);
